@@ -12,6 +12,7 @@
  * Player into each. Also handle problem-mode Players with
  * 'eidogo-player-problem'
 **/
+
 (function() {
     
     var autoCfg = window.eidogoConfig || {};
@@ -41,30 +42,60 @@
                 eidogo.util.hasClass(divs[i], "eidogo-player-problem")) {
                 els.push(divs[i]);
             }
-        }
+        };
         var el;
         for (var i = 0; el = els[i]; i++) {
             var cfg = {container: el, enableShortcuts: false, theme: "compact"};
-            if (eidogo.util.hasClass(el, "eidogo-player-problem"))
-                for (var key in problemCfg)
+            if (eidogo.util.hasClass(el, "eidogo-player-problem")){
+                for (var key in problemCfg){
                     cfg[key] = problemCfg[key];
-            for (var key in autoCfg)
+		}
+	    }
+            for (var key in autoCfg){
                 cfg[key] = autoCfg[key];
-            var sgfUrl = el.getAttribute('sgf');
-            if (sgfUrl)
-                cfg.sgfUrl = sgfUrl;
-            else if (el.innerHTML)
-                cfg.sgf = el.innerHTML;
-            var shrink = el.getAttribute('shrink');
-            if (shrink)
-                cfg.shrinkToFit = (shrink == "no" ? false : true);            
-            el.innerHTML = "";
-            eidogo.util.show(el);
-            
-            var player = new eidogo.Player(cfg);
-            eidogo.autoPlayers.push(player);
-        }
+	    }
+	    var sgfUrl = el.getAttribute('sgf');
+	    var closureEl = el;
+	    var sfun = function(data){
+		window.console.log('callback');
+		window.console.log(data);
+		window.tempGlobalSgf = data.sgf;
+		cfg.sgf = data.sgf;
+		var shrink = closureEl.getAttribute('shrink');
+		if (shrink){
+		    cfg.shrinkToFit = (shrink == "no" ? false : true);
+		}
+		closureEl.innerHTML = "";
+		eidogo.util.show(closureEl);
+		
+		var player = new eidogo.Player(cfg);
+		eidogo.autoPlayers.push(player);
+	    };
+
+	    if(document.domain == "www.shidogo.com"){
+		console.log('begin10');
+		alert('begin10');
+		jQuery.getJSON('http://games.shidogo.com/get_sgf.php?jsonpf='+sgfUrl+'&callback=?', sfun);
+	    }
+	    else{
+		console.log('fail');
+		if (sgfUrl){
+		    cfg.sgfUrl = sgfUrl;
+		}
+		else if (el.innerHTML){
+		    cfg.sgf = el.innerHTML;
+		}
+		var shrink = el.getAttribute('shrink');
+		if (shrink){
+		    cfg.shrinkToFit = (shrink == "no" ? false : true);
+		}
+		el.innerHTML = "";
+		eidogo.util.show(el);
+		
+		var player = new eidogo.Player(cfg);
+		eidogo.autoPlayers.push(player);
+	    }
         
-    });
+	}});
     
 })();

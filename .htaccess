@@ -1,8 +1,6 @@
+AddType application/x-httpd-php .phtml .php
 #Options -MultiViews
 RewriteEngine on
-
-RewriteCond %{HTTP_HOST} ^www\.eidogo\.com [NC]
-RewriteRule (.*) http://eidogo.com$1 [R=301,L]
 
 RedirectMatch 404 /\\.svn(/|$)
 RedirectMatch 404 /\\.git(/|$)
@@ -21,14 +19,9 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^source$ /source.phtml [L,NE]
 RewriteRule ^upload$ /upload.phtml [L,NE]
 RewriteRule ^games$ /games.phtml [L,NE]
-RewriteRule ^problems$ /problems.phtml [L,NE]
-RewriteRule ^problems/(.*)$ /problems.phtml?path=$1 [L,NE]
-RewriteRule ^tourney$ /tourney.phtml [L,NE]
-RewriteRule ^ff-extension$ /ff_extension.phtml [L,NE]
-RewriteRule ^(kjd)$ /#$1 [R,L,NE]
-RewriteRule ^(search)$ /#$1 [R,L,NE]
 RewriteRule ^(gnugo.*)$ /#$1 [R,L,NE]
 RewriteRule ^(blank)$ /#$1 [R,L,NE]
+RewriteRule ^sgf/(.*)$ /get_sgf.php?f=$1 [L]
 
 php_flag zlib.output_compression On 
 php_value zlib.output_compression_level 5

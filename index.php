@@ -58,7 +58,7 @@ var player;
     // aren't handled by Player directly
     var hooks = {
         initGame: function() {
-            document.title = "EidoGo - " + this.getGameDescription();
+            document.title = "Shidogo - " + this.getGameDescription();
         },
         showGameInfo: function(info) {
             if (this.gameName == "kjd") {
@@ -97,7 +97,7 @@ var player;
             loadGame({gameName: gn, loadPath: [0,0]}, function() {
                 var url = location.href.replace(/#[^#]+$/, "") + "#" + this.gameName;
                 this.setPermalink();
-                this.prependComment("Game saved to <a href='" + url + "'>" + url + "</a>");
+                this.prependComment("Game saved to <a href='" + url + "'>" + url + "</a>.<br />You can copy and paste this link to reference this game.");
             }.bind(this));
         }
     };
@@ -146,21 +146,31 @@ var player;
         var rest = hashParts.slice(1);
         
         hide("options");
-        
-        if (!gameName || gameName == "kjd" || gameName == "kombilo")
+        if(!gameName){
+   	    loadBlank("blank");
+	}
+        else if (gameName == "kjd" || gameName == "kombilo"){
             loadJoseki(gameName, loadPath);
-        else if (gameName == "url")
+        }
+        else if (gameName == "url"){
             loadUrl(hash.replace(/^#?url:/, ""));
-        else if (gameName == "raw")
+	}
+        else if (gameName == "raw"){
             loadRaw(decodeURIComponent(hash.replace(/^#?raw:/g, "").replace(/\+/g, " ")));
-        else if (gameName == "search")
+        }
+        else if (gameName == "search"){
             loadSearch(rest);
-        else if (gameName.indexOf("gnugo") === 0)
+        }
+        else if (gameName.indexOf("gnugo") === 0){
             loadGnuGo(gameName);
-        else if (gameName.indexOf("blank") === 0)
+        }
+        else if (gameName.indexOf("blank") === 0){
+	    var blankfun = function(){};
             loadBlank(gameName);
-        else
+        }
+        else{
             loadGame({gameName: gameName, loadPath: loadPath});
+        }
     }
     
     function loadJoseki(gameName, loadPath) {
@@ -239,7 +249,10 @@ var player;
     function loadBlank(gameName) {
         byId("options").innerHTML = byId("options-blank").innerHTML;
         show("options");
-        loadGame({gameName: gameName});
+	var commentfun = function(){
+	  player.prependComment("Welcome to games.shidogo.com! This part of the site is intended to let players post board games inside their questions and answers. You can play out a sequence yourself, or upload a pre-existing game.<br /><br />Once you're done editing the board, simple click the \"Save to Server\" link at the bottom, and you'll get a link you can copy/paste into your shidogo post.");
+ 	};
+        loadGame({gameName: gameName}, commentfun);
     }
     
     function addHistory(hash) {

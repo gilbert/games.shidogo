@@ -36,7 +36,7 @@ if (strlen($sgf) > 30000) {
     // ~ 30 KB limit
     exit;
 }
-file_put_contents("../sgf/saved/$id.sgf", $sgf);
+file_put_contents("../../protected/sgf/$id.sgf", $sgf);
 
 echo $id;
 

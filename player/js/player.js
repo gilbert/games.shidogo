@@ -323,7 +323,7 @@ eidogo.Player.prototype = {
         
         // URL path to SGF files
         this.sgfPath = cfg.sgfPath || this.sgfPath;
-    
+
         // Load the first node of the first node by default
         this.loadPath = cfg.loadPath && cfg.loadPath.length > 1 ?
             cfg.loadPath : [0, 0];
@@ -1880,10 +1880,9 @@ eidogo.Player.prototype = {
     **/
     updateControls: function() {
         // move number
-        this.dom.moveNumber.innerHTML = (this.moveNumber ?
-            (t['move'] + " " + this.moveNumber) :
-            (this.permalinkable ? "permalink" : ""));
-    
+	var plink = this.permalinkable ? "permalink" : "";
+        this.dom.moveNumber.innerHTML = (this.moveNumber ? (t['move'] + " " + this.moveNumber + " " + plink) : plink);
+	
         // captures
         this.dom.whiteCaptures.innerHTML = t['captures'] +
             ": <span>" + this.board.captures.W + "</span>";
