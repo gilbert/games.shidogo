@@ -53,6 +53,9 @@ var player;
         hide = eidogo.util.hide,
         show = eidogo.util.show,
         addEvent = eidogo.util.addEvent;
+    var commentFn = function(){
+	  player.prependComment("Welcome to games.shidogo.com! This part of the site is intended to let players post board games inside their Shidogo questions and answers. You can play out a sequence yourself, or upload a pre-existing game.<br /><br />Once you're done editing the board, simple click the \"Save to Server\" link at the bottom, and you'll get some text to copy/paste that lets you <span style=\"color:#ff0000\">embed</span> your game into your Shidogo post.");
+ 	};
     
     // Provide handlers for frontend things (page title, permalinks) that
     // aren't handled by Player directly
@@ -94,10 +97,11 @@ var player;
                 addHistory(hash);
         },
         saved: function(gn) {
-            loadGame({gameName: gn, loadPath: [0,0]}, function() {
+            loadGame({gameName: gn, loadPath: player.cursor.getPath()}, function() {
                 var url = location.href.replace(/#[^#]+$/, "") + "#" + this.gameName;
                 this.setPermalink();
-                this.prependComment("Game saved to <a href='" + url + "'>" + url + "</a>.<br />You can copy and paste this link to reference this game.");
+                this.prependComment("Game saved to <a href='" + url + "'>" + url + "</a>.<br /><br />Copy and paste the following line to <span style=\"color:#ff0000\">embed</span> this game into a Shidogo question:"
+		+'<br /><br /><span style="color:#ff0000">&lt;a href="http://games.shidogo.com/sgf/'+this.gameName+'.sgf" title="eidogo-player-auto"&gt;game-link&lt;/a&gt;</span>');
             }.bind(this));
         }
     };
@@ -105,6 +109,7 @@ var player;
     // Load game data; create a Player instance if necessary
     function loadGame(params, completeFn) {
         params = params || {};
+	completeFn = completeFn || commentFn;
         var cfg = {
             progressiveLoad:    false,
             markCurrent:        true,
@@ -249,10 +254,8 @@ var player;
     function loadBlank(gameName) {
         byId("options").innerHTML = byId("options-blank").innerHTML;
         show("options");
-	var commentfun = function(){
-	  player.prependComment("Welcome to games.shidogo.com! This part of the site is intended to let players post board games inside their questions and answers. You can play out a sequence yourself, or upload a pre-existing game.<br /><br />Once you're done editing the board, simple click the \"Save to Server\" link at the bottom, and you'll get a link you can copy/paste into your shidogo post.");
- 	};
-        loadGame({gameName: gameName}, commentfun);
+	
+        loadGame({gameName: gameName}, commentFn);
     }
     
     function addHistory(hash) {
