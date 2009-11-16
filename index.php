@@ -78,14 +78,17 @@ var player;
                     "amount of spurious, non-fuseki moves included.";
             }
         },
-        setPermalink: function() {
-            if (!this.gameName || ['search', 'gnugo', 'url'].contains(this.gameName)) return;
-            var gn = this.gameName || "";
+	getPermalink: function() {
+	    var gn = this.gameName || "";
             // Use move-based path for josekis to future-proof permalinks
             var path = (gn == "kjd" || gn == "kombilo" ?
                 this.cursor.getPathMoves().join("") :
                 this.cursor.getPath().join(","));
-            var hash = gn + (path ? ":" + path : "");
+            return gn + (path ? ":" + path : "");
+	},
+        setPermalink: function() {
+            if (!this.gameName || ['search', 'gnugo', 'url'].contains(this.gameName)) return;
+            var hash = this.hook("getPermalink");
             addHistory(hash);
         },
         searchRegion: function(params) {
@@ -100,8 +103,8 @@ var player;
             loadGame({gameName: gn, loadPath: player.cursor.getPath()}, function() {
                 var url = location.href.replace(/#[^#]+$/, "") + "#" + this.gameName;
                 this.setPermalink();
-                this.prependComment("Game saved to <a href='" + url + "'>" + url + "</a>.<br /><br />Copy and paste the following line to <span style=\"color:#ff0000\">embed</span> this game into a Shidogo question:"
-		+'<br /><br /><span style="color:#ff0000">&lt;a href="http://games.shidogo.com/sgf/'+this.gameName+'.sgf" title="eidogo-player-auto"&gt;game-link&lt;/a&gt;</span>');
+                this.prependComment("Game saved to <a href='" + url + "'>" + url + "</a>.<br /><br />Copy and paste the following line to <span style=\"color:#ff0000\">embed</span> this game into a Shidogo question or answer:"
+		+'<br /><br /><span style="color:#ff0000">&lt;a href="http://games.shidogo.com/#'+this.hook("getPermalink")+'" title="eidogo-player-auto"&gt;game-link&lt;/a&gt;</span>');
             }.bind(this));
         }
     };
