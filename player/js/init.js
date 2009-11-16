@@ -35,47 +35,50 @@
     eidogo.util.addEvent(window, "load", function() {
         eidogo.autoPlayers = [];
         var els = [];
-        var divs = document.getElementsByTagName('div');
+        var divs = document.getElementsByTagName('a');
         var len = divs.length;
         for (var i = 0; i < len; i++) {
-            if (eidogo.util.hasClass(divs[i], "eidogo-player-auto") ||
-                eidogo.util.hasClass(divs[i], "eidogo-player-problem")) {
+            if (divs[i].getAttribute('title')
+		&& divs[i].getAttribute('title').substring(0,18) == "eidogo-player-auto") {
                 els.push(divs[i]);
             }
         };
+
         var el;
         for (var i = 0; el = els[i]; i++) {
-            var cfg = {container: el, enableShortcuts: false, theme: "compact"};
-            if (eidogo.util.hasClass(el, "eidogo-player-problem")){
-                for (var key in problemCfg){
-                    cfg[key] = problemCfg[key];
-		}
-	    }
+            var cfg = {enableShortcuts: false, theme: "compact"};
             for (var key in autoCfg){
                 cfg[key] = autoCfg[key];
 	    }
-	    var sgfUrl = el.getAttribute('sgf');
-	    var closureEl = el;
+	    var href = el.getAttribute('href');
+	    var colonIndex = href.lastIndexOf(':');
+	    var rawname = href.substring(href.lastIndexOf('#')+1,colonIndex);
+	    var sgfname = rawname + '.sgf';
+	    var iPath = strToIntList(href.substring(colonIndex+1));
+	    cfg.loadPath = iPath;
+
+	    var newEl = document.createElement('div');
+	    jQuery(el).replaceWith(newEl);
+	    cfg.container = newEl;
+	    var permalink = document.createElement('a');
+	    permalink.setAttribute('href',href);
+	    permalink.innerHTML = 'Permalink';
+	    permalink.setAttribute('target', '_blank');
+	    jQuery(newEl).after(permalink);
 	    var sfun = function(data){
 		window.console.log('callback');
 		window.console.log(data);
-		window.tempGlobalSgf = data.sgf;
 		cfg.sgf = data.sgf;
-		var shrink = closureEl.getAttribute('shrink');
-		if (shrink){
-		    cfg.shrinkToFit = (shrink == "no" ? false : true);
-		}
-		closureEl.innerHTML = "";
-		eidogo.util.show(closureEl);
+
+		newEl.innerHTML = '';
+		eidogo.util.show(newEl);
 		
 		var player = new eidogo.Player(cfg);
 		eidogo.autoPlayers.push(player);
 	    };
 
 	    if(document.domain == "www.shidogo.com"){
-		console.log('begin10');
-		alert('begin10');
-		jQuery.getJSON('http://games.shidogo.com/get_sgf.php?jsonpf='+sgfUrl+'&callback=?', sfun);
+		jQuery.getJSON('http://games.shidogo.com/get_sgf.php?jsonpf='+sgfname+'&callback=?', sfun);
 	    }
 	    else{
 		console.log('fail');
@@ -99,3 +102,12 @@
 	}});
     
 })();
+
+function strToIntList(str){
+    var strs = str.split(',');
+    var ints = [];
+    for(var i=0;i<strs.length;i++){
+	ints[i] = strs[i];
+    }
+    return ints;
+}
