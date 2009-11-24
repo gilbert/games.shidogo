@@ -50,6 +50,16 @@
             for (var key in autoCfg){
                 cfg[key] = autoCfg[key];
 	    }
+	    // custom config
+	    var customs = el.getAttribute('title');
+	    // notice the space character in these conditionals
+	    if(customs.match(' mini-mode')){
+		cfg.theme = 'mini';
+		cfg.shrinkToFit = true;
+		cfg.showComments = false;
+	    }
+
+
 	    var href = el.getAttribute('href');
 	    var colonIndex = href.lastIndexOf(':');
 	    var rawname = href.substring(href.lastIndexOf('#')+1,colonIndex);
@@ -62,7 +72,7 @@
 	    cfg.container = newEl;
 	    var permalink = document.createElement('a');
 	    permalink.setAttribute('href',href);
-	    permalink.innerHTML = 'Permalink';
+	    permalink.innerHTML = 'View/Edit this game on games.shidogo';
 	    permalink.setAttribute('target', '_blank');
 	    jQuery(newEl).after(permalink);
 	    var sfun = function(data){
