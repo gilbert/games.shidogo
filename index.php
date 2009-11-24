@@ -54,7 +54,7 @@ var player;
         show = eidogo.util.show,
         addEvent = eidogo.util.addEvent;
     var commentFn = function(){
-	  player.prependComment("Welcome to games.shidogo.com! This part of the site is intended to let players post board games inside their Shidogo questions and answers. You can play out a sequence yourself, or upload a pre-existing game.<br /><br />Once you're done editing the board, simple click the \"Save to Server\" link at the bottom, and you'll get some text to copy/paste that lets you <span style=\"color:#ff0000\">embed</span> your game into your Shidogo post.");
+	  player.prependComment("Welcome to games.shidogo.com! This part of the site is intended to let players post board games inside their Shidogo questions and answers. You can play out a sequence yourself, or upload a pre-existing game.<br /><br />Once you're done editing the board, simple click the \"Save to Server\" link at the bottom, and you'll get some text to copy/paste that lets you <a href=\"/help\" style=\"color:#ff0000\">embed</a> your game into your Shidogo post.");
  	};
     
     // Provide handlers for frontend things (page title, permalinks) that
