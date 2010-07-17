@@ -620,6 +620,7 @@ eidogo.Player.prototype = {
                 }
             }
         });
+
         // nab the outermost points
         for (var key in points) {
             var pt = this.sgfCoordToPoint(key);
@@ -628,10 +629,10 @@ eidogo.Player.prototype = {
             if (t == null || pt.y < t) t = pt.y;
             if (b == null || pt.y > b) b = pt.y;
         }
-        this.cropParams.width = r - l + 1;
-        this.cropParams.height = b - t + 1;
-        this.cropParams.left = l;
-        this.cropParams.top = t;
+        this.cropParams.left = (l <= 4) ? 0 : l;
+        this.cropParams.top = (t <= 4) ? 0 : t;
+        this.cropParams.width = (r >= 12) ? 18 - this.cropParams.left : r - this.cropParams.left + 1;
+        this.cropParams.height = (b >= 12) ? 18 - this.cropParams.top : b - this.cropParams.top + 1;
         // add padding
         var pad = this.cropParams.padding;
         for (var lpad = pad; l - lpad < 0; lpad--) {};
