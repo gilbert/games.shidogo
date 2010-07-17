@@ -39,7 +39,7 @@
         var len = divs.length;
         for (var i = 0; i < len; i++) {
             if (divs[i].getAttribute('title')
-		&& divs[i].getAttribute('title').substring(0,18) == "eidogo-player-auto") {
+		&& hasClass(divs[i], "eidogo-player-auto")) {
                 els.push(divs[i]);
             }
         };
@@ -75,23 +75,25 @@
 	    permalink.innerHTML = 'View/Edit this game on games.shidogo';
 	    permalink.setAttribute('target', '_blank');
 	    jQuery(newEl).after(permalink);
-	    var sfun = function(data){
-		window.console.log('callback');
-		window.console.log(data);
-		cfg.sgf = data.sgf;
+	    var sfun = (function(cfg_,newEl_){
+	      return function(data){
+		//window.console.log('callback');
+		//window.console.log(data);
+		cfg_.sgf = data.sgf;
 
-		newEl.innerHTML = '';
-		eidogo.util.show(newEl);
+		newEl_.innerHTML = '';
+		eidogo.util.show(newEl_);
 		
-		var player = new eidogo.Player(cfg);
+		var player = new eidogo.Player(cfg_);
 		eidogo.autoPlayers.push(player);
-	    };
+	      };
+	    })(cfg,newEl);
 
 	    if(document.domain == "www.shidogo.com"){
 		jQuery.getJSON('http://games.shidogo.com/get_sgf.php?jsonpf='+sgfname+'&callback=?', sfun);
 	    }
 	    else{
-		console.log('fail');
+		//console.log('fail');
 		if (sgfUrl){
 		    cfg.sgfUrl = sgfUrl;
 		}
@@ -120,4 +122,12 @@ function strToIntList(str){
 	ints[i] = strs[i];
     }
     return ints;
+}
+
+function hasClass( obj, selector ) {
+    var className = " " + selector + " ";
+    if ( (" " + obj.getAttribute('title') + " ").replace(/[\n\t]/g, " ").indexOf( className ) > -1 ) {
+	return true;
+    }
+    return false;
 }
