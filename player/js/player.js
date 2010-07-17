@@ -583,10 +583,10 @@ eidogo.Player.prototype = {
         size = size || 19;
         if (this.board && this.board.renderer && this.board.boardSize == size) return;
         try {
-            this.dom.boardContainer.innerHTML = "";
+            this.dom.container.innerHTML = "";
             var rendererProto = (this.renderer == "flash" ?
                 eidogo.BoardRendererFlash : eidogo.BoardRendererHtml);
-            var renderer = new rendererProto(this.dom.boardContainer, size, this, this.cropParams);
+            var renderer = new rendererProto(this.dom.container, size, this, this.cropParams);
             this.board = new eidogo.Board(renderer, size);
         } catch (e) {
             if (e == "No DOM container") {
