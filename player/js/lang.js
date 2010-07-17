@@ -4,7 +4,7 @@
  * Code licensed under AGPLv3:
  * http://www.fsf.org/licensing/licenses/agpl-3.0.html
  *
- * Supplements to core language objects (Array, Function)
+ * Supplements to core language objects (Array, Function, Object)
  */
 Array.prototype.contains = function(needle) {
     if (Array.prototype.indexOf)
@@ -164,4 +164,13 @@ Function.prototype.bind = function($thisObj) {
     return function() {
         return $method.apply($thisObj, $args.concat(Array.from(arguments)));
     }
+}
+
+// object inheritance
+if (typeof Object.create !== 'function') {
+    Object.create = function (o) {
+        function F() {}
+        F.prototype = o;
+        return new F();
+    };
 }
