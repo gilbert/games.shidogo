@@ -196,3 +196,7 @@ pre {
     font-family: arial, helvetica, sans-serif;
     font-size: 13px;
 }
+
+.help img{
+border:7px solid #777;
+}
