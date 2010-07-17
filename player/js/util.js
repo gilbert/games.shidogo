@@ -299,6 +299,10 @@ eidogo.util = {
         var count = 0;
         for (var i in obj) count++;
         return count;
+    },
+    
+    extend: function(target, source) {
+        for (attrname in source) target[attrname] = source[attrname];
     }
     
 };
