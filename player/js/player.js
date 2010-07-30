@@ -442,6 +442,12 @@ eidogo.Player.prototype = {
         }
         target.loadJson(data);
         target._cached = true;
+        
+        // set color based on handicap and number of moves
+        if (this.totalMoves % 2 == 0 && target.HA <  2
+          ||this.totalMoves % 2 == 1 && target.HA >= 2) this.currentColor = 'B';
+        else this.currentColor = 'W';
+        
         this.doneLoading();
         this.progressiveLoads--;
         if (!target._parent) {
