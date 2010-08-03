@@ -116,7 +116,7 @@ eidogo.Player.prototype = {
             TB: this.addMarker,
             DD: this.addMarker,
             PL: this.setColor,
-            C:  this.showComments,
+            //C:  this.showComments,
             N:  this.showAnnotation,
             GB: this.showAnnotation,
             GW: this.showAnnotation,
@@ -442,13 +442,6 @@ eidogo.Player.prototype = {
         }
         target.loadJson(data);
         target._cached = true;
-        
-        // set color based on handicap and number of moves
-        // TODO: is first move in root or root's child?
-        if (target.getMove()
-          &&this.totalMoves % 2 == 0 && target.HA <  2
-          ||this.totalMoves % 2 == 1 && target.HA >= 2) this.currentColor = 'B';
-        else this.currentColor = 'W';
         
         this.doneLoading();
         this.progressiveLoads--;
